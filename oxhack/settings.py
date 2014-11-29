@@ -37,6 +37,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'oxhack',
+    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -114,3 +115,14 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+# User registration settings for django-registration-redux
+ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
+REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
+
+# Temporary email settings for registration
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST_USER = 'frigaardj'
+EMAIL_HOST_PASSWORD = 'oxhunt2014'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

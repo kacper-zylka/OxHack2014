@@ -4,6 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from oxhack.models import College, Challenge, ChallengeCompletion, DIFFICULTIES
 
 import sendgrid
+from django.shortcuts import render_to_response
 
 
 reply_prefix = 'Clues for college: '
@@ -118,3 +119,21 @@ def parseAnswerStringForAnswers(answer_string):
         ans = ans[ next_colon - 1 : ]
         print(ans)
     return answers
+
+def home(request):
+    return render_to_response('oxhack/landing.html')
+
+def rules(request):
+    return render_to_response('oxhack/rules.html')
+
+def leaderboard(request):
+    return render_to_response('oxhack/leaderboard.html')
+
+def visualisations(request):
+    return render_to_response('oxhack/visualisations.html')
+
+def about(request):
+    return render_to_response('oxhack/about.html')
+
+def register(request):
+    return render_to_response('oxhack/register.html')
