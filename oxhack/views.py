@@ -18,3 +18,19 @@ def inbound(request):
 
 def home(request):
     return render_to_response('oxhack/landing.html')
+
+def rules(request):
+    return render_to_response('oxhack/rules.html')
+
+def leaderboard(request):
+    return render_to_response('oxhack/leaderboard.html')
+
+def visualisations(request):
+    return render_to_response('oxhack/visualisations.html')
+
+def about(request):
+    return render_to_response('oxhack/about.html')
+
+def register(request):
+    return render_to_response('oxhack/register.html')
+

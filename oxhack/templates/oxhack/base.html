@@ -54,16 +54,22 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="{% url 'home' %}">Home</a>
                     </li>
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="{% url 'rules' %}">Rules of the game</a>
                     </li>
                     <li>
-                        <a href="post.html">Sample Post</a>
+                        <a href="{% url 'leaderboard' %}">Leaderboard</a>
                     </li>
                     <li>
-                        <a href="contact.html">Contact</a>
+                        <a href="{% url 'visualisations' %}">Visualisations</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'about' %}">About us</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'register' %}">Register</a>
                     </li>
                 </ul>
             </div>
