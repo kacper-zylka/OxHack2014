@@ -12,6 +12,6 @@ smtpapi==0.1.2
 static==1.0.2
 static3==0.5.1
 unittest2==0.8.0
-vboxapi==1.0
+#vboxapi==1.0
 virtualenv==1.11.6
 wsgiref==0.1.2

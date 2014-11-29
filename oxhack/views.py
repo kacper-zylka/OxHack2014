@@ -17,4 +17,4 @@ def inbound(request):
 
 
 def home(request):
-    return render_to_response('oxhack/base.html')
+    return render_to_response('oxhack/landing.html')
