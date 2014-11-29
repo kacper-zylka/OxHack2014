@@ -4,9 +4,7 @@ from oxhack import views
 
 
 urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'oxhack.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+    url(r'^$', 'oxhack.views.home', name='home'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^inbound', views.inbound, name='inbound'),

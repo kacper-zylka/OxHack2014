@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 import sendgrid
+from django.shortcuts import render_to_response
 
 @csrf_exempt
 def inbound(request):
@@ -14,3 +15,6 @@ def inbound(request):
 
     return HttpResponse(status)
 
+
+def home(request):
+    return render_to_response('oxhack/base.html')
