@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 # List of college names and codes
 COLLEGES = (
-    ('MAN', 'MANSFIELD'),
-    ('IMP', 'IMPERIAL'),
+    ('MAN', 'Mansfield'),
+    ('IMP', 'Imperial'),
 )
 
 
@@ -21,12 +21,12 @@ DIFFICULTIES = (
 
 
 class College(models.Model):
-    name = models.CharField(max_length=200, choices=COLLEGES)
+    name = models.CharField(max_length=200)
     latitude = models.FloatField('Latitude')
     longitude = models.FloatField('Longitude')
 
     def __str__(self):
-        return dict(COLLEGES)[self.name]
+        return self.name
 
 
 class Challenge(models.Model):
