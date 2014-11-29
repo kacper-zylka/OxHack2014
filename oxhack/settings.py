@@ -36,6 +36,7 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'oxhack',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -102,3 +103,14 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'd8jberfnlbn2mv',
+        'USER': 'ptielcjqzkcixq',
+        'PASSWORD': 'r9XelJoJxcFOxqbL99h-opYkP_',
+        'HOST': 'ec2-107-20-197-146.compute-1.amazonaws.com',
+        'PORT': '5432',
+    }
+}
