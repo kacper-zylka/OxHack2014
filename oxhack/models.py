@@ -4,8 +4,8 @@ from django.contrib.auth.models import User
 
 # List of college names and codes
 COLLEGES = (
-    ('MANSFIELD', 'MAN'),
-    ('IMPERIAL', 'IMP'),
+    ('MAN', 'MANSFIELD'),
+    ('IMP', 'IMPERIAL'),
 )
 
 
@@ -22,8 +22,11 @@ DIFFICULTIES = (
 
 class College(models.Model):
     name = models.CharField(max_length=200, choices=COLLEGES)
-    latitude = models.FloatField('Latitude', blank=True, null=True)
-    longitude = models.FloatField('Longitude', blank=True, null=True)
+    latitude = models.FloatField('Latitude')
+    longitude = models.FloatField('Longitude')
+
+    def __str__(self):
+        return dict(COLLEGES)[self.name]
 
 
 class Challenge(models.Model):
@@ -32,12 +35,24 @@ class Challenge(models.Model):
     difficulty = models.IntegerField(choices=DIFFICULTIES)
     college = models.ForeignKey(College)
 
+    def __str__(self):
+        return self.text
+
 
 class UserProfile(models.Model):
-    # One-to-one mapping with a django.contrib.auth.models.User object
     user = models.OneToOneField(User)
-    # Many-to-one mapping with a College object
     college = models.ForeignKey(College)
-    # Many-to-many mapping with Challenge objects
-    challenges = models.ManyToManyField(Challenge)
+
+    def __str__(self):
+        return self.user.__str__()
+
+
+class ChallengeCompletion(models.Model):
+    user = models.ForeignKey(UserProfile)
+    challenge = models.ForeignKey(Challenge)
+    time = models.DateField()  # TODO add auto_now?
+
+    def __str__(self):
+        return self.user.__str__() + " " + self.challenge.__str__() + " " + self.time
+
 
