@@ -8,4 +8,8 @@ urlpatterns = patterns('',
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^inbound', views.inbound, name='inbound'),
+
+    (r'^accounts/', include('registration.backends.default.urls')),
+    (r'^accounts/', include('registration.auth_urls')),
+    (r'^accounts/profile', views.home),
 )
