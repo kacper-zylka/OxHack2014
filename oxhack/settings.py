@@ -32,12 +32,12 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'oxhack',
-    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -120,9 +120,11 @@ DATABASES = {
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
 REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
 
+AUTH_USER_MODEL = 'auth.User'
+
 # Temporary email settings for registration
 EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'frigaardj'
+EMAIL_HOST_USER = 'oxhunt'
 EMAIL_HOST_PASSWORD = 'oxhunt2014'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True

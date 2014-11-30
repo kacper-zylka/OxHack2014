@@ -1,8 +1,5 @@
-{% extends "oxhack/base.html" %}
-{% block pagecontent %}
-
-{% load staticfiles %}
-    <!-- Page Header -->
+{% extends "oxhack/base.html" %} {% block pagecontent %} {% load staticfiles %}
+<!-- Page Header -->
 <header class="intro-header-not-landing">
 </header>
 
@@ -12,29 +9,35 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-left">
                 <h2>Register</h2>
-                <form method="post">
+
+                <form id="user_form" method="post" action="/register">
+
                     {% csrf_token %}
                     <table class="registration-table">
-                    <tr>
-                        <td style="width: 200px">Username:</td>
-                        <td>{{ form.username}}</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px">E-mail:</td>
-                        <td>{{ form.email }}</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px">Password:</td>
-                        <td>{{ form.password1 }}</td>
-                    </tr>
-                    <tr>
-                        <td style="width: 200px">Password (repeat):</td>
-                        <td>{{ form.password2 }}</td>
-                    </tr>
+                        <tr>
+                            <td style="width: 200px">Username:</td>
+                            <td>{{ user_form.username}}</td>
+                            <td>{{ user_form.username.errors }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 200px">E-mail:</td>
+                            <td>{{ user_form.email }}</td>
+                            <td>{{ user_form.email.errors }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 200px">Password:</td>
+                            <td>{{ user_form.password }}</td>
+                            <td>{{ user_form.password.errors }}</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 200px">College:</td>
+                            <td>{{ profile_form.college }}</td>
+                            <td>{{ profile_form.college.errors }}</td>
+                        </tr>
                     </table>
-
-                    <center><input style="margin: 30px 0 0 0" class="btn btn-default" type="submit" value="Submit" /></center>
-
+                    <center>
+                        <input style="margin: 30px 0 0 0" class="btn btn-default" type="submit" value="Submit" />
+                    </center>
                 </form>
             </div>
         </div>

@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+# from registration.signals import user_registered
+# from django.dispatch import receiver
 
 # Difficulty enums and dictionary
 EASY = 1
@@ -37,9 +39,20 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.__str__()
 
+# @receiver(user_registered)
+# def registration_active_receive_email(sender, user, request, **kwargs):
+#     user_id = user.userprofile.id
+#     user = UserProfile.objects.get(pk=user_id)
+
+#     try:
+#         if request.POST['college']:
+#             pass
+#     except:
+#         user.collegeText = 'DefaultCollege'
+#         user.save()
 
 class ChallengeCompletion(models.Model):
-    user = models.ForeignKey(User)
+    userProfile = models.ForeignKey(UserProfile)
     challenge = models.ForeignKey(Challenge)
     time = models.DateTimeField()  # TODO add auto_now?
 
