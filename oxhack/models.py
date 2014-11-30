@@ -1,6 +1,11 @@
 from django.db import models 
 from django.contrib.auth.models import User
+<<<<<<< HEAD
 from django.db.models.signals import post_save
+=======
+# from registration.signals import user_registered
+# from django.dispatch import receiver
+>>>>>>> master
 
 # Difficulty enums and dictionary
 EASY = 1
@@ -38,14 +43,9 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.__str__()
 
-def create_user_profile(sender, instance, created, **kwargs):  
-    if created:  
-       profile, created = UserProfile.objects.get_or_create(user=instance)  
-
-post_save.connect(create_user_profile, sender=User) 
 
 class ChallengeCompletion(models.Model):
-    user = models.ForeignKey(User)
+    userProfile = models.ForeignKey(UserProfile)
     challenge = models.ForeignKey(Challenge)
     time = models.DateTimeField()  # TODO add auto_now?
 

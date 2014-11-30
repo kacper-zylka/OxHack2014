@@ -32,12 +32,12 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'oxhack',
-    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -105,27 +105,21 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'd8jberfnlbn2mv',
-        'USER': 'ptielcjqzkcixq',
-        'PASSWORD': 'r9XelJoJxcFOxqbL99h-opYkP_',
-        'HOST': 'ec2-107-20-197-146.compute-1.amazonaws.com',
-        'PORT': '5432',
-    }
-}
+import secret
+
+DATABASES = secret.DATABASES
 
 # User registration settings for django-registration-redux
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
 REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
 
-# Temporary email settings for registration
-EMAIL_HOST = 'smtp.sendgrid.net'
-EMAIL_HOST_USER = 'frigaardj'
-EMAIL_HOST_PASSWORD = 'oxhunt2014'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+AUTH_USER_MODEL = 'auth.User'
+
+EMAIL_HOST = secret.EMAIL_HOST
+EMAIL_HOST_USER = secret.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = secret.EMAIL_HOST_PASSWORD
+EMAIL_PORT = secret.EMAIL_PORT
+EMAIL_USE_TLS = secret.EMAIL_USE_TLS
 
 TEMPLATE_CONTEXT_PROCESSORS = (
 

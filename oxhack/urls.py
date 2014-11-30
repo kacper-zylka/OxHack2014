@@ -10,12 +10,13 @@ urlpatterns = patterns('',
     url(r'^leaderboard$', 'oxhack.views.leaderboard', name='leaderboard'),
     url(r'^visualisations$', 'oxhack.views.visualisations', name='visualisations'),
     url(r'^about$', 'oxhack.views.about', name='about'),
-    url(r'^register$', 'oxhack.views.register', name='register'),
 
     url(r'^admin/', include(admin.site.urls)),
     url(r'^inbound', views.inbound, name='inbound'),
 
-    (r'^accounts/', include('registration.backends.default.urls')),
-    (r'^accounts/', include('registration.auth_urls')),
-    (r'^accounts/profile', views.home),
+    url(r'^register$', views.register, name='register'),
+
+    # (r'^accounts/', include('registration.backends.default.urls')),
+    # (r'^accounts/', include('registration.auth_urls')),
+    # (r'^accounts/profile', views.home),
 )
