@@ -66,7 +66,7 @@ def inbound(request):
 
                 if chall != None and chall.answer == ans_value:
                     # make them complete the challenge
-                    c = ChallengeCompletion(user=userProfile, challenge=chall, time=timezone.now())
+                    c = ChallengeCompletion(userProfile=userProfile, challenge=chall, time=timezone.now())
                     c.save()
                     debug_response += str(c)
                     reply_email += 'Correct!'
@@ -102,7 +102,7 @@ def inbound(request):
 
 def incompletedChallengesForUserCollege(college, userProfile):
     all_challenges = Challenge.objects.filter(college=college)
-    completed_challenges = [challComp.challenge for challComp in ChallengeCompletion.objects.filter(user=userProfile)]
+    completed_challenges = [challComp.challenge for challComp in ChallengeCompletion.objects.filter(userProfile=userProfile)]
     return [chall for chall in all_challenges if chall not in completed_challenges]
 
 def sendUserNotEnrolledEmail(to_address):
@@ -146,7 +146,7 @@ def parseAnswerStringForAnswers(answer_string):
     Takes a string in the '1: answer     5: answer 5 \n 4: answer4' format and returns a dictionary
     of the answer numbers and their values (all lowercase and spaces removed)
 
-    { 
+    {
         1: 'answer1', 2: 'answer2'
     }
 
@@ -212,7 +212,7 @@ def leaderboard(request):
     users = User.objects.all()
 
     for u in users:
-        users_leaderboard.append((u.username, ChallengeCompletion.objects.filter(user=u).count()))
+        users_leaderboard.append((u.username, ChallengeCompletion.objects.filter(userProfile=u).count()))
 
     users_leaderboard = filter(lambda x: x[1] > 0, users_leaderboard)
     users_leaderboard = sorted(users_leaderboard, key=lambda x: x[1], reverse=True)
