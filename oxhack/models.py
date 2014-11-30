@@ -1,14 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-
-# List of college names and codes
-COLLEGES = (
-    ('MAN', 'MANSFIELD'),
-    ('IMP', 'IMPERIAL'),
-)
-
-
 # Difficulty enums and dictionary
 EASY = 1
 MODERATE = 2
@@ -26,7 +18,6 @@ class College(models.Model):
     longitude = models.FloatField('Longitude')
 
     def __str__(self):
-        # return dict(COLLEGES)[self.name]
         return self.name
 
 class Challenge(models.Model):
