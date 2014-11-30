@@ -64,8 +64,14 @@
                     <li {% if leaderboard %}style="background-color: #E23C3C"{% endif %}>
                         <a href="{% url 'leaderboard' %}">Leaderboard</a>
                     </li>
-                    <li {% if visualisations %}style="background-color: #E23C3C"{% endif %}>
-                        <a href="{% url 'visualisations' %}">Visualisations</a>
+                    <li {% if chord_graph %}style="background-color: #E23C3C"{% endif %}>
+                        <a href="{% url 'chord_graph' %}">See chord graph</a>
+                    </li>
+                    <li {% if heat_map %}style="background-color: #E23C3C"{% endif %}>
+                        <a href="{% url 'heat_map' %}">See heat map</a>
+                    </li>
+                    <li {% if network_graph %}style="background-color: #E23C3C"{% endif %}>
+                        <a href="{% url 'network_graph' %}">View network graph</a>
                     </li>
                     <li {% if about %}style="background-color: #E23C3C"{% endif %}>
                         <a href="{% url 'about' %}">About us</a>

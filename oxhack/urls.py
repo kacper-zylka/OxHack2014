@@ -8,7 +8,11 @@ urlpatterns = patterns('',
 
     url(r'^rules$', 'oxhack.views.rules', name='rules'),
     url(r'^leaderboard$', 'oxhack.views.leaderboard', name='leaderboard'),
-    url(r'^visualisations$', 'oxhack.views.visualisations', name='visualisations'),
+
+    url(r'^visualisations/chord_graph$', 'oxhack.views.visualisation_chord_graph', name='chord_graph'),
+    url(r'^visualisations/heat_map$', 'oxhack.views.visualisation_heat_map', name='heat_map'),
+    url(r'^visualisations/network_graph$', 'oxhack.views.visualisation_network_graph', name='network_graph'),
+
     url(r'^about$', 'oxhack.views.about', name='about'),
 
     url(r'^admin/', include(admin.site.urls)),

@@ -223,10 +223,17 @@ def leaderboard(request):
     return render_to_response('oxhack/leaderboard.html', {'colleges' : college_leaderboard, 'users' : users_leaderboard, 'leaderboard': 'true'})
 
 
+def visualisation_chord_graph(request):
+    return render_to_response('oxhack/chord_graph.html', {'chord_graph': 'true'})
 
 
-def visualisations(request):
-    return render_to_response('oxhack/visualisations.html', {'visualisations': 'true'})
+def visualisation_heat_map(request):
+    return render_to_response('oxhack/heat_map.html', {'heat_map': 'true'})
+
+
+def visualisation_network_graph(request):
+    return render_to_response('oxhack/network_graph.html', {'network_graph': 'true'})
+
 
 def about(request):
     return render_to_response('oxhack/about.html', {'about': 'true'})
