@@ -1,11 +1,5 @@
 from django.db import models 
 from django.contrib.auth.models import User
-<<<<<<< HEAD
-from django.db.models.signals import post_save
-=======
-# from registration.signals import user_registered
-# from django.dispatch import receiver
->>>>>>> master
 
 # Difficulty enums and dictionary
 EASY = 1
