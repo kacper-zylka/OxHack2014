@@ -73,8 +73,9 @@ def inbound(request):
 
             reply_email += '\n\n'
 
+        sendEmail(to_address=from_address,subject=college_name,text=reply_email)
 
-        return HttpResponse(debug_response)
+        return HttpResponse(reply_email)
 
     # Else they are probably asking for a college clue list. Check
     else:
