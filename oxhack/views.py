@@ -48,19 +48,31 @@ def inbound(request):
         answers = parseAnswerStringForAnswers(body)
         debug_response += '\n correct answers:\n'
 
-        reply_email
+        reply_email = 'Answer summary:\n\n'
 
         for ans_key, ans_value in answers.iteritems():
             # they might have since completed the challenge they are emailing about
             try:
                 chall = incompleted_challenges.index(ans_key - 1)
+                reply_email += str(ans_key) + ':\n'
+                reply_email += 'Question: ' + incompleted_challenges[ans_key - 1].question + '\n'
+                reply_email += 'Answer:' + chall.answer + '\n'
+
                 if chall != None and chall.answer == ans_value:
                     # make them complete the challenge
                     c = ChallengeCompletion(user=userProfile, challenge=incompleted_challenges[ans_key - 1], time=timezone.now())
                     c.save()
                     debug_response += str(c)
+                    reply_email += 'Correct!'
+                else:
+                    reply_email += 'Wrong! Fetch the clues again and try another answer.'
+
             except ValueError:
-                pass
+                reply_email += str(ans_key) + ':\n'
+                reply_email += 'Invalid question number. Have you already answered that question? Try and fetch the clues again.'
+
+            reply_email += '\n\n'
+
 
         return HttpResponse(debug_response)
 
@@ -128,6 +140,11 @@ def parseAnswerStringForAnswers(answer_string):
     """
     Takes a string in the '1: answer     5: answer 5 \n 4: answer4' format and returns a dictionary
     of the answer numbers and their values (all lowercase and spaces removed)
+
+    { 
+        1: 'answer1', 2: 'answer2'
+    }
+
     DOES NOT WORK WITH ANSWER NUMBERS WITH 2 DIGITS. e.g. '10: answer10'
     """
     ans = ''.join(c.lower() for c in answer_string if not c.isspace())
