@@ -15,6 +15,7 @@ urlpatterns = patterns('',
     url(r'^inbound', views.inbound, name='inbound'),
 
     url(r'^register$', views.register, name='register'),
+    url(r'^registration_complete$', views.registration_complete, name='registration_complete'),
 
     # (r'^accounts/', include('registration.backends.default.urls')),
     # (r'^accounts/', include('registration.auth_urls')),

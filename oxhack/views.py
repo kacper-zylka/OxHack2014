@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import render_to_response, render
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.shortcuts import redirect
 
 from oxhack.forms import UserForm, UserProfileForm
 from oxhack.models import College, Challenge, ChallengeCompletion, UserProfile, DIFFICULTIES
@@ -231,6 +232,9 @@ def visualisations(request):
 def about(request):
     return render_to_response('oxhack/about.html', {'about': 'true'})
 
+def registration_complete(request):
+    return render_to_response('registration/registration_complete.html', {'registration_complete': 'true'})
+
 def register(request):
     # A boolean value for telling the template whether the registration was successful.
     # Set to False initially. Code changes value to True when registration succeeds.
@@ -264,6 +268,9 @@ def register(request):
 
             # Update our variable to tell the template registration was successful.
             registered = True
+
+            # Open the confirmation page
+            return redirect('registration_complete')
 
         # Invalid form or forms - mistakes or something else?
         # Print problems to the terminal.
