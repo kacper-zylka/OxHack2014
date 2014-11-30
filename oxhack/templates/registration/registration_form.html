@@ -1,14 +1,43 @@
+{% extends "oxhack/base.html" %}
+{% block pagecontent %}
+
+{% load staticfiles %}
+    <!-- Page Header -->
+<header class="intro-header-not-landing">
+</header>
+
+
 <section>
     <div class="container">
         <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 text-center">
+            <div class="col-lg-8 col-lg-offset-2 text-left">
                 <h2>Register</h2>
                 <form method="post">
                     {% csrf_token %}
-                    {{ form }}
-                    <input type="submit" value="Submit" />
+                    <table class="registration-table">
+                    <tr>
+                        <td style="width: 200px">Username:</td>
+                        <td>{{ form.username}}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 200px">E-mail:</td>
+                        <td>{{ form.email }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 200px">Password:</td>
+                        <td>{{ form.password1 }}</td>
+                    </tr>
+                    <tr>
+                        <td style="width: 200px">Password (repeat):</td>
+                        <td>{{ form.password2 }}</td>
+                    </tr>
+                    </table>
+                    <center><input style="margin: 30px 0 0 0" type="submit" value="Submit" /></center>
                 </form>
             </div>
         </div>
     </div>
 </section>
+
+
+{% endblock %}
