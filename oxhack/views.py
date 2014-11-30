@@ -193,6 +193,10 @@ def leaderboard(request):
             total_completions += num_completions
         college_leaderboard[name]['total_completions'] = total_completions
 
+        name_img_dict={"All Souls": "all-souls.png","Balliol": "balliol.png","Blackfriars": "blackfriars.png","Brasenose": "brasenose.png","Campion Hall": "campion-hall.png","Christ Church": "christ-church.png","Coprus Christi": "corpus-christi.png","Exeter": "exeter.png","Green Templeton": "green-templeton.png","Harris Manchester": "harris-manchester.png","Hertford": "hertford.png","Jesus": "jesus.png","Keble": "keble.png","Kellog": "kellog.png","Lady Margaret": "lady-margaret-hall.png","Linacre": "linacre.png","Lincoln": "lincoln.png","Magdalen": "magdalen.png","Mansfield": "mansfield.png","Merton": "merton.png","New": "new.png","Nuffield": "nuffield.png","Oriel": "oriel.png","Pembroke": "pembroke.png","Queens": "queens.png","Regent Park": "regent-park.png","St Annes": "st-annes.png","St Anthonys": "st-antonys.png","St Benets": "st-benets-hall.png","St Catherines": "st-catherines.png","St Cross": "st-cross.png","St Edmund Hall": "st-edmund-hall.png","St Hildas": "st-hildas.png","St Hughs": "st-hughs.png","St Johns": "st-johns.png","St Peters": "st-peters.png","St Stephens": "st-stephens-house.png","Somerville": "somerville.png","Trinity": "trinity.png","University": "university.png","Wadham": "wadham.png","Wolfson":"wolfson.png","Worcester": "worcester.png","Wycliffe": "wycliffe-hall.png"}
+
+        college_leaderboard[name]['image_name'] = "/static/oxhack/images/college-crests/" + name_img_dict[name]
+
     # Sort college_leaderboard by total_completions
     college_leaderboard = sorted(college_leaderboard.items(), key=lambda x: x[1]['total_completions'], reverse=True)
 
@@ -211,6 +215,8 @@ def leaderboard(request):
     # print users_leaderboard
 
     return render_to_response('oxhack/leaderboard.html', {'colleges' : college_leaderboard, 'users' : users_leaderboard, 'leaderboard': 'true'})
+
+
 
 
 def visualisations(request):
