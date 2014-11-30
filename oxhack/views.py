@@ -41,7 +41,7 @@ def inbound(request):
         return HttpResponse("Email contained blank subject")
 
     # Check if they want questions
-    if body[0:len(question_command)] == question_command:
+    if body[0] == question_command:
         # find any colleges that match the Subject line
         matching_colleges = College.objects.filter(name__icontains=subject.replace('RE: ','').replace('Re: ','' ))
 
@@ -93,7 +93,7 @@ def inbound(request):
                 reply_email += chall.text + '<br>'
                 reply_email += 'You answered: ' + ans_value + '<br>'
 
-                if chall != None and chall.answer == ans_value:
+                if chall != None and chall.answer.lower() == ans_value.lower():
                     # make them complete the challenge
                     c = ChallengeCompletion(userProfile=userProfile, challenge=chall, time=timezone.now())
                     c.save()
@@ -113,8 +113,6 @@ def inbound(request):
         sendEmail(to_address=from_address,subject=subject,text=reply_email)
 
         return HttpResponse(reply_email)
-
-    return HttpResponse("Pass")
 
 
 def incompletedChallengesForUserCollege(college, userProfile):
