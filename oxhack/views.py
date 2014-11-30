@@ -1,16 +1,14 @@
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-
-from oxhack.models import College, Challenge, ChallengeCompletion, UserProfile, DIFFICULTIES
+from django.shortcuts import render_to_response, render
 from django.contrib.auth.models import User
-
 from django.utils import timezone
 
-import sendgrid
-
-from django.shortcuts import render_to_response, render
-
 from oxhack.forms import UserForm, UserProfileForm
+from oxhack.models import College, Challenge, ChallengeCompletion, UserProfile, DIFFICULTIES
+
+import sendgrid
+import secret
 
 reply_prefix = 'Clues for college: '
 
@@ -138,7 +136,7 @@ def sendInvalidCollegeEmail(to_address):
 
 
 def sendEmail(to_address,subject,text):
-    sg = sendgrid.SendGridClient('oxhunt', 'oxhunt2014')
+    sg = sendgrid.SendGridClient(secret.EMAIL_HOST_USER, secret.EMAIL_HOST_PASSWORD)
     message = sendgrid.Mail(to=to_address, subject=subject, text=text, from_email='mail@oxhunt.bymail.in')
     status, msg = sg.send(message)
     return status
