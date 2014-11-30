@@ -9,7 +9,7 @@ require([
     function (InfoTemplate, FeatureLayer, Map, HeatmapRenderer){
     map = new Map("map", {
       center: [-1.257918, 51.759021],
-      zoom: 12,
+      zoom: 14,
       basemap: "streets"
     });
 

@@ -1,0 +1,31 @@
+{% extends "oxhack/base.html" %}
+{% block pagecontent %}
+
+
+<!-- For some reason this has to be included twice (once in base.html, once here) -->
+{% load staticfiles %}
+      <link rel="stylesheet" href="http://js.arcgis.com/3.11/dijit/themes/claro/claro.css">
+      <link rel="stylesheet" href="http://js.arcgis.com/3.11/esri/css/esri.css">
+      <script src="http://js.arcgis.com/3.11/"></script>
+      <script src="/static/oxhack/js/esri_map.js"></script>
+    <!-- Page Header -->
+    <header class="intro-header-not-landing">
+    </header>
+
+    <!-- Main Content -->
+        <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <h2 class="post-title">
+                    Visualisations
+                </h2>
+                <div id="map">
+                </div>
+                </br>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+
+    {% endblock %}
