@@ -6,8 +6,14 @@
 {% load staticfiles %}
       <link rel="stylesheet" href="http://js.arcgis.com/3.11/dijit/themes/claro/claro.css">
       <link rel="stylesheet" href="http://js.arcgis.com/3.11/esri/css/esri.css">
+      <link rel="stylesheet" type="text/css" href="/static/oxhack/css/chord.css">
+      <link href="/static/oxhack/css/foundation.min.css" rel="stylesheet" type="text/css">
+      <link href="/static/oxhack/css/network.css" rel="stylesheet" type="text/css">
       <script src="http://js.arcgis.com/3.11/"></script>
+      <script src="http://d3js.org/d3.v3.min.js"></script>
       <script src="/static/oxhack/js/esri_map.js"></script>
+      <script src="/static/oxhack/js/chord.js"></script>
+      <script src="http://code.jquery.com/jquery.js"></script>
     <!-- Page Header -->
     <header class="intro-header-not-landing">
     </header>
@@ -21,9 +27,18 @@
                 </h2>
                 <div id="map">
                 </div>
-            <div>
+                <br/>
+                <div id="chord">
+                </div>
+                </br>
+                <div id="network">
+                </div>
+                </br>
+            </div>
         </div>
     </div>
+  <script src="/static/oxhack/js/network.js"></script>
+  <script src="/static/oxhack/js/foundation.min.js"></script>
 
     <hr>
 

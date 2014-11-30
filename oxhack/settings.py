@@ -32,12 +32,12 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'oxhack',
-    'registration',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -113,6 +113,7 @@ DATABASES = secret.DATABASES
 ACCOUNT_ACTIVATION_DAYS = 7 # One-week activation window
 REGISTRATION_AUTO_LOGIN = True # Automatically log the user in.
 
+AUTH_USER_MODEL = 'auth.User'
 
 EMAIL_HOST = secret.EMAIL_HOST
 EMAIL_HOST_USER = secret.EMAIL_HOST_USER

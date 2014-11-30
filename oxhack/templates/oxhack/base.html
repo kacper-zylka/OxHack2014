@@ -71,7 +71,7 @@
                         <a href="{% url 'about' %}">About us</a>
                     </li>
                     <li {% if request.get_full_path == "/accounts/register/" or request.get_full_path == "/accounts/register/complete/"  %}style="background-color: #E23C3C"{% endif %}>
-                        <a href="{% url 'registration_register' %}">Register</a>
+                        <a href="{% url 'register' %}">Register</a>
                     </li>
                 </ul>
             </div>

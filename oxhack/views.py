@@ -1,16 +1,14 @@
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.decorators.csrf import csrf_exempt
-
-from oxhack.models import College, Challenge, ChallengeCompletion, UserProfile, DIFFICULTIES
+from django.shortcuts import render_to_response, render
 from django.contrib.auth.models import User
-
 from django.utils import timezone
 
-import sendgrid
-from django.shortcuts import render_to_response
-from models import College, Challenge, ChallengeCompletion, UserProfile
-from django.contrib.auth.models import User
+from oxhack.forms import UserForm, UserProfileForm
+from oxhack.models import College, Challenge, ChallengeCompletion, UserProfile, DIFFICULTIES
 
+import sendgrid
+import secret
 
 reply_prefix = 'Clues for college: '
 
@@ -21,12 +19,16 @@ def inbound(request):
         return HttpResponseBadRequest("Must POST")
 
     from_address = request.POST.get('from','')
+    from_address = from_address[from_address.find("<")+1:from_address.find(">")]
     subject = request.POST.get('subject','')
     body = request.POST.get('body','')
     userQuery = User.objects.filter(email=from_address).exclude(username='admin')
-
+    print(from_address)
+    print(subject)
+    print(body)
+    print(userQuery)
     # No account with that email exists
-    if len(userQuery) != 1:
+    if len(userQuery) == 0:
         sendUserNotEnrolledEmail(to_address=from_address)
         return HttpResponse("Email address not enrolled")
 
@@ -37,11 +39,14 @@ def inbound(request):
         sendBlankSubjectEmail(to_address=from_address)
         return HttpResponse("Email contained blank subject")
     # If it is a reply to a clue list email, parse it for answers
-    elif reply_prefix in subject:
+    elif body:
         debug_response = ''
         # Trim off the prefix to just get the college name
-        college_name = subject[len(reply_prefix):]
+        college_name = subject
         college = College.objects.get(name__icontains=college_name)
+        if not college:
+            sendInvalidCollegeEmail(to_address=from_address)
+            return HttpResponse()
         # TODO get the user from their email
         incompleted_challenges = incompletedChallengesForUserCollege(college=college, userProfile=userProfile)
         debug_response += 'incompleted_challenges: \n' + str(incompleted_challenges)
@@ -53,14 +58,15 @@ def inbound(request):
         for ans_key, ans_value in answers.iteritems():
             # they might have since completed the challenge they are emailing about
             try:
-                chall = incompleted_challenges.index(ans_key - 1)
+                chall = incompleted_challenges[ans_key - 1]
+                print(chall)
                 reply_email += str(ans_key) + ':\n'
-                reply_email += 'Question: ' + incompleted_challenges[ans_key - 1].question + '\n'
-                reply_email += 'Answer:' + chall.answer + '\n'
+                reply_email += 'Question: ' + chall.text + '\n'
+                reply_email += 'Answer: ' + chall.answer + '\n'
 
                 if chall != None and chall.answer == ans_value:
                     # make them complete the challenge
-                    c = ChallengeCompletion(user=userProfile, challenge=incompleted_challenges[ans_key - 1], time=timezone.now())
+                    c = ChallengeCompletion(user=userProfile, challenge=chall, time=timezone.now())
                     c.save()
                     debug_response += str(c)
                     reply_email += 'Correct!'
@@ -74,7 +80,7 @@ def inbound(request):
             reply_email += '\n\n'
 
 
-        return HttpResponse(debug_response)
+        return HttpResponse(reply_email)
 
     # Else they are probably asking for a college clue list. Check
     else:
@@ -87,10 +93,9 @@ def inbound(request):
             return HttpResponse("Could not match college subject.")
 
         # If the body is empty, send them the clue list for that college
-        if not body.strip():
-            text = getClueList(college=matching_colleges[0], userProfile=userProfile)
-            sendEmail(from_address,reply_prefix + matching_colleges[0].name,text)
-            return HttpResponse(text)
+        text = getClueList(college=matching_colleges[0], userProfile=userProfile)
+        sendEmail(from_address,reply_prefix + matching_colleges[0].name,text)
+        return HttpResponse(text)
 
     return HttpResponse("Pass")
 
@@ -131,8 +136,8 @@ def sendInvalidCollegeEmail(to_address):
 
 
 def sendEmail(to_address,subject,text):
-    sg = sendgrid.SendGridClient('frigaardj', 'oxhunt2014')
-    message = sendgrid.Mail(to=to_address, subject=subject, text=text, from_email='inbound@frigaardj.bymail.in')
+    sg = sendgrid.SendGridClient(secret.EMAIL_HOST_USER, secret.EMAIL_HOST_PASSWORD)
+    message = sendgrid.Mail(to=to_address, subject=subject, text=text, from_email='mail@oxhunt.bymail.in')
     status, msg = sg.send(message)
     return status
 
@@ -226,4 +231,52 @@ def about(request):
     return render_to_response('oxhack/about.html', {'about': 'true'})
 
 def register(request):
-    return render_to_response('oxhack/register.html', {'register': 'true'})
+    # A boolean value for telling the template whether the registration was successful.
+    # Set to False initially. Code changes value to True when registration succeeds.
+    registered = False
+
+    # If it's a HTTP POST, we're interested in processing form data.
+    if request.method == 'POST':
+        # Attempt to grab information from the raw form information.
+        # Note that we make use of both UserForm and UserProfileForm.
+        user_form = UserForm(data=request.POST)
+        profile_form = UserProfileForm(data=request.POST)
+
+        # If the two forms are valid...
+        if user_form.is_valid() and profile_form.is_valid():
+            # Save the user's form data to the database.
+            user = user_form.save()
+
+            # Now we hash the password with the set_password method.
+            # Once hashed, we can update the user object.
+            user.set_password(user.password)
+            user.save()
+
+            # Now sort out the UserProfile instance.
+            # Since we need to set the user attribute ourselves, we set commit=False.
+            # This delays saving the model until we're ready to avoid integrity problems.
+            profile = profile_form.save(commit=False)
+            profile.user = user
+
+            # Now we save the UserProfile model instance.
+            profile.save()
+
+            # Update our variable to tell the template registration was successful.
+            registered = True
+
+        # Invalid form or forms - mistakes or something else?
+        # Print problems to the terminal.
+        # They'll also be shown to the user.
+        else:
+            print user_form.errors, profile_form.errors
+
+    # Not a HTTP POST, so we render our form using two ModelForm instances.
+    # These forms will be blank, ready for user input.
+    else:
+        user_form = UserForm()
+        profile_form = UserProfileForm()
+
+    # Render the template depending on the context.
+    return render(request,
+            'registration/registration_form.html',
+            {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
