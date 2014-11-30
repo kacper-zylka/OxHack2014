@@ -11,7 +11,7 @@ from oxhack.models import College, Challenge, ChallengeCompletion, UserProfile, 
 import sendgrid
 import secret
 
-question_command = 'q'
+question_command = 'g'
 
 @csrf_exempt
 def inbound(request):
