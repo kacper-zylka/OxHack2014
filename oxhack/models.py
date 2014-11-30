@@ -44,6 +44,6 @@ class ChallengeCompletion(models.Model):
     time = models.DateTimeField()  # TODO add auto_now?
 
     def __str__(self):
-        return self.user.__str__() + " " + self.challenge.__str__() + " " + str(self.time)
+        return self.userProfile.__str__() + " " + self.challenge.__str__() + " " + str(self.time)
 
 

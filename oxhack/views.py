@@ -10,23 +10,23 @@ from oxhack.models import College, Challenge, ChallengeCompletion, UserProfile, 
 import sendgrid
 import secret
 
-reply_prefix = 'Clues for college: '
+question_command = 'q'
 
 @csrf_exempt
 def inbound(request):
-
     if request.method != 'POST':
         return HttpResponseBadRequest("Must POST")
 
     from_address = request.POST.get('from','')
     from_address = from_address[from_address.find("<")+1:from_address.find(">")]
     subject = request.POST.get('subject','')
-    body = request.POST.get('body','')
+    body = request.POST.get('text','') # get the text before linebreak
     userQuery = User.objects.filter(email=from_address).exclude(username='admin')
-    print(from_address)
-    print(subject)
-    print(body)
-    print(userQuery)
+    print('from_address:' +from_address)
+    print('subject:' +subject)
+    print('text:' +body)
+    print('userQuery:' +str(userQuery))
+
     # No account with that email exists
     if len(userQuery) == 0:
         sendUserNotEnrolledEmail(to_address=from_address)
@@ -35,110 +35,138 @@ def inbound(request):
     userProfile = UserProfile.objects.get(user=userQuery[0])
 
     # If it has a blank subject, send them instructions on how to play
-    if not subject:
+    if subject == '':
         sendBlankSubjectEmail(to_address=from_address)
         return HttpResponse("Email contained blank subject")
-    # If it is a reply to a clue list email, parse it for answers
-    elif body:
+
+    # Check if they want questions
+    if body[0:len(question_command)] == question_command:
+        # find any colleges that match the Subject line
+        matching_colleges = College.objects.filter(name__icontains=subject.replace('RE: ','').replace('Re: ','' ))
+
+        # If there are multiple or no matching colleges, ask them to send again with different college name format.
+        if matching_colleges.count() != 1:
+            sendInvalidCollegeEmail(to_address=from_address,subject= subject)
+            return HttpResponse("Could not match college subject.")
+
+        # If the body is empty, send them the clue list for that college
+        text = "Here are all the clues at " + matching_colleges[0].name + " college:\n\n"
+        text += getClueList(college=matching_colleges[0], userProfile=userProfile)
+        text += "\n\nReply to this message with the following format to answer (write on one line):\n\n1: Answer to question 1    2: Answer to question 2     ..... \n\nIf you don't know the answer to a question, simply don't include it. You can answer questions in any order."
+
+        sendEmail(from_address,matching_colleges[0].name,text)
+        return HttpResponse(text)
+    # Parse for answers
+    else:
+        first_line = body.split('\n')[0]
+        subject = subject.replace('Re: ', '').replace('RE: ', '')
+
+        if first_line.find(':') == -1:
+            sendInvalidBodyEmail(to_address=from_address, subject=subject)
+            return HttpResponse("Unrecognised email format")
+
         debug_response = ''
         # Trim off the prefix to just get the college name
         college_name = subject
-        college = College.objects.get(name__icontains=college_name)
-        if not college:
-            sendInvalidCollegeEmail(to_address=from_address)
-            return HttpResponse()
+        print('subject:' + subject)
+        colleges = College.objects.filter(name__icontains=college_name)
+        college = colleges[0]
+        if len(colleges) == 0:
+            sendInvalidCollegeEmail(to_address=from_address, subject=subject)
+            return HttpResponse(subject)
         # TODO get the user from their email
-        incompleted_challenges = incompletedChallengesForUserCollege(college=college, userProfile=userProfile)
-        debug_response += 'incompleted_challenges: \n' + str(incompleted_challenges)
-        answers = parseAnswerStringForAnswers(body)
+        # incompleted_challenges = incompletedChallengesForUserCollege(college=college, userProfile=userProfile)
+        all_challenges = Challenge.objects.filter(college=college)
+        # debug_response += 'incompleted_challenges: \n' + str(all_challenges)
+        answers = parseAnswerStringForAnswers(first_line)
         debug_response += '\n correct answers:\n'
 
-        reply_email = 'Answer summary:\n\n'
+        reply_email = 'Your answers:\n\n'
 
         for ans_key, ans_value in answers.iteritems():
             # they might have since completed the challenge they are emailing about
             try:
-                chall = incompleted_challenges[ans_key - 1]
+                chall = all_challenges[ans_key - 1]
                 print(chall)
-                reply_email += str(ans_key) + ':\n'
-                reply_email += 'Question: ' + chall.text + '\n'
-                reply_email += 'Answer: ' + chall.answer + '\n'
+                reply_email += str(ans_key) + ': '
+                reply_email += chall.text + '\n'
+                reply_email += 'You answered: ' + ans_value + '\n'
 
                 if chall != None and chall.answer == ans_value:
                     # make them complete the challenge
-                    c = ChallengeCompletion(user=userProfile, challenge=chall, time=timezone.now())
+                    c = ChallengeCompletion(userProfile=userProfile, challenge=chall, time=timezone.now())
                     c.save()
                     debug_response += str(c)
                     reply_email += 'Correct!'
                 else:
-                    reply_email += 'Wrong! Fetch the clues again and try another answer.'
+                    reply_email += 'Wrong! Try again.'
 
-            except ValueError:
-                reply_email += str(ans_key) + ':\n'
-                reply_email += 'Invalid question number. Have you already answered that question? Try and fetch the clues again.'
+            except IndexError:
+                reply_email += str(ans_key) + ': '
+                reply_email += 'Invalid question number.\n'
 
             reply_email += '\n\n'
+            reply_email += 'Your summary for ' + college_name + ' college:\n\n'
+            reply_email += getClueList(college, userProfile)
 
-        sendEmail(to_address=from_address,subject=college_name,text=reply_email)
+        sendEmail(to_address=from_address,subject=subject,text=reply_email)
 
         return HttpResponse(reply_email)
-
-    # Else they are probably asking for a college clue list. Check
-    else:
-        # find any colleges that match the Subject line
-        matching_colleges = College.objects.filter(name__icontains=subject)
-
-        # If there are multiple or no matching colleges, ask them to send again with different college name format.
-        if matching_colleges.count() != 1:
-            sendInvalidCollegeEmail(to_address=from_address)
-            return HttpResponse("Could not match college subject.")
-
-        # If the body is empty, send them the clue list for that college
-        text = getClueList(college=matching_colleges[0], userProfile=userProfile)
-        sendEmail(from_address,reply_prefix + matching_colleges[0].name,text)
-        return HttpResponse(text)
 
     return HttpResponse("Pass")
 
 
 def incompletedChallengesForUserCollege(college, userProfile):
     all_challenges = Challenge.objects.filter(college=college)
-    completed_challenges = [challComp.challenge for challComp in ChallengeCompletion.objects.filter(user=userProfile)]
+    completed_challenges = [challComp.challenge for challComp in ChallengeCompletion.objects.filter(userProfile=userProfile)]
     return [chall for chall in all_challenges if chall not in completed_challenges]
 
 def sendUserNotEnrolledEmail(to_address):
+    print('Sending unrecognised email email')
     subject = "Woops - unrecognised email address!"
-    body = "We didn't recognise your email address. If you haven't created an account, click here."
+    body = """<p>We didn't recognise your email address.</p><p>If you haven't created an account, click <a href="http://oxhunt.me/register">here</a>.</p>"""
     return sendEmail(to_address = to_address , subject = subject, text = body)
 
 
 def getClueList(college, userProfile):
-    incompleted_challenges = incompletedChallengesForUserCollege(college=college, userProfile=userProfile)
+    # incompleted_challenges = incompletedChallengesForUserCollege(college=college, userProfile=userProfile)
+    all_challenges = Challenge.objects.filter(college=college)
+    completed_challenges = [challComp.challenge for challComp in ChallengeCompletion.objects.filter(userProfile=userProfile)]
 
     clues_list = []
-    for i, chall in enumerate(incompleted_challenges):
-        clues_list.append( str(i+1) + ": (" + dict(DIFFICULTIES)[chall.difficulty] + ") " + chall.text)
 
-    body = "Here are the available clues for " + college.name + ":\n\n"
-    body += '\n'.join(clues_list)
-    body += "\n\nReply to this message with the following format to answer:\n\n1: Answer to question 1 \n2: Answer to question 2\netc."
+
+    for i, chall in enumerate(all_challenges):
+        status = '[Answered]' if chall in completed_challenges else '[Unanswered]'
+
+        clues_list.append( status + '['+dict(DIFFICULTIES)[chall.difficulty]+'] ' + str(i+1) + ': ' + chall.text)
+
+    body = '\n'.join(clues_list)
     return body
 
 def sendBlankSubjectEmail(to_address):
+    print('Sending blank subject email')
     subject = "Woops - blank subject!"
-    body = "You didn't include a subject in your email. To get a list of clues for a college, simply send a blank email to this address with the college name as the subject line. For a list of colleges, click here."
+    body = """<p>You didn't include a subject in your email.</p> <p>To get a list of clues for a college, simply <a href="mailto:mail@oxhunt.bymail.me?subject=College&body=g">send an email to this address with the college name as the subject line and 'g' in the body. For a list of colleges, click <a href="http://oxhunt.me/leaderboard">here</a>.</p>"""
     return sendEmail(to_address = to_address , subject = subject, text = body)
 
 
-def sendInvalidCollegeEmail(to_address):
-    subject = "Woops - unrecognised college!"
-    body = "We didn't recognise that college name. To get a list of clues for a college, simply send a blank email to this address with the college name as the subject line. For a list of valid college names, click here."
+def sendInvalidCollegeEmail(to_address, subject):
+    print('Sending invalid college email')
+    body = """<p>We didn't recognise that college name. To get a list of clues for a college,
+     simply send an email to this address with the college name as the subject line and 'g' in the body.</p>
+    For a list of valid college names, click <a href="http://oxhunt.me/leaderboard">here</a>."""
+    return sendEmail(to_address = to_address , subject = subject, text = body)
+
+def sendInvalidBodyEmail(to_address, subject):
+    print('Sending invalid body email')
+    body = """<p>There's something a bit funny about your syntax.</p><p>Request the clues by replying to this email with the letter 'q' and try again.</p>"""
     return sendEmail(to_address = to_address , subject = subject, text = body)
 
 
 def sendEmail(to_address,subject,text):
     sg = sendgrid.SendGridClient(secret.EMAIL_HOST_USER, secret.EMAIL_HOST_PASSWORD)
-    message = sendgrid.Mail(to=to_address, subject=subject, text=text, from_email='mail@oxhunt.bymail.in')
+    message = sendgrid.Mail(to=to_address, subject=subject, html=text, text=text, from_email='mail@oxhunt.bymail.in')
     status, msg = sg.send(message)
     return status
 
@@ -210,10 +238,10 @@ def leaderboard(request):
 
     users_leaderboard = []
 
-    users = User.objects.all()
+    users = UserProfile.objects.all()
 
     for u in users:
-        users_leaderboard.append((u.username, ChallengeCompletion.objects.filter(user=u).count()))
+        users_leaderboard.append((u.user.username, ChallengeCompletion.objects.filter(userProfile=u).count()))
 
     users_leaderboard = filter(lambda x: x[1] > 0, users_leaderboard)
     users_leaderboard = sorted(users_leaderboard, key=lambda x: x[1], reverse=True)
@@ -281,3 +309,18 @@ def register(request):
     return render(request,
             'registration/registration_form.html',
             {'user_form': user_form, 'profile_form': profile_form, 'registered': registered} )
+
+def getNetworkGraphJSON():
+    all_chall_comps = ChallengeCompletion.objects.all()
+    colleges = {}
+
+    for chall_comp in all_chall_comps:
+        user_college = chall_comp.userProfile.college
+        chall_college = chall_comp.challenge.college
+        # print(user_college, chall_college)
+        try:
+            colleges[user_college.name][chall_college.name] += 1
+        except KeyError:
+            colleges[user_college.name] = {chall_college.name: 1}
+
+    print(colleges)
