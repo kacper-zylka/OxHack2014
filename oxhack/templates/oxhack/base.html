@@ -47,7 +47,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="index.html">OxHUNT</a>
+                <a class="navbar-brand" href="{% url 'home' %}">OxHUNT</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -125,9 +125,15 @@
         </div>
     </footer>
 
+
     <!-- jQuery -->
     <script src="{% static 'oxhack/js/jquery.js' %}"></script>
 
+    <!-- Bootstrap Core JavaScript -->
+    <script src="{% static 'oxhack/js/bootstrap.min.js' %}"></script>
+
+    <!-- Custom Theme JavaScript -->
+    <script src="{% static 'oxhack/js/clean-blog.min.js' %}"></script>
 
 </body>
 
