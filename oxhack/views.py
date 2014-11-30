@@ -106,9 +106,9 @@ def inbound(request):
                 reply_email += str(ans_key) + ': '
                 reply_email += 'Invalid question number.<br>'
 
-            reply_email += '<br><br>'
-            reply_email += 'Your summary for ' + college_name + ' college:<br><br>'
-            reply_email += getClueList(college, userProfile)
+        reply_email += '<br><br>'
+        reply_email += 'Your summary for ' + college_name + ' college:<br><br>'
+        reply_email += getClueList(college, userProfile)
 
         sendEmail(to_address=from_address,subject=subject,text=reply_email)
 
