@@ -17,20 +17,20 @@ def inbound(request):
 
 
 def home(request):
-    return render_to_response('oxhack/landing.html')
+    return render_to_response('oxhack/landing.html', {'landing': 'true'})
 
 def rules(request):
-    return render_to_response('oxhack/rules.html')
+    return render_to_response('oxhack/rules.html', {'rules': 'true'})
 
 def leaderboard(request):
-    return render_to_response('oxhack/leaderboard.html')
+    return render_to_response('oxhack/leaderboard.html', {'leaderboard': 'true'})
 
 def visualisations(request):
-    return render_to_response('oxhack/visualisations.html')
+    return render_to_response('oxhack/visualisations.html', {'visualisations': 'true'})
 
 def about(request):
-    return render_to_response('oxhack/about.html')
+    return render_to_response('oxhack/about.html', {'about': 'true'})
 
 def register(request):
-    return render_to_response('oxhack/register.html')
+    return render_to_response('oxhack/register.html', {'register': 'true'})
 

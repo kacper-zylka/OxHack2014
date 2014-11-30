@@ -46,6 +46,12 @@ hr.small {
   border-width: 4px;
   border-color: white;
 }
+.registration-table{
+  width: 100%;
+}
+.registration-table tr td{
+  padding: 20px 0 10px 0;
+}
 .navbar-custom {
   position: absolute;
   top: 0;
@@ -141,6 +147,10 @@ hr.small {
   background-size: cover;
   -o-background-size: cover;
   margin-bottom: 50px;
+}
+.intro-header-not-landing {
+  background-color: #1D4048;
+  height: 60px;
 }
 .intro-header .site-heading,
 .intro-header .post-heading,
@@ -393,3 +403,4 @@ img::-moz-selection {
 body {
   webkit-tap-highlight-color: #0085a1;
 }
+
