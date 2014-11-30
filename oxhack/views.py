@@ -51,9 +51,9 @@ def inbound(request):
             return HttpResponse("Could not match college subject.")
 
         # If the body is empty, send them the clue list for that college
-        text = "Here are all the clues at " + matching_colleges[0].name + " college:\n\n"
+        text = "<p>Here are all the clues at " + matching_colleges[0].name + " college:</p>"
         text += getClueList(college=matching_colleges[0], userProfile=userProfile)
-        text += "\n\nReply to this message with the following format to answer (write on one line):\n\n1: Answer to question 1    2: Answer to question 2     ..... \n\nIf you don't know the answer to a question, simply don't include it. You can answer questions in any order."
+        text += "<p>Reply to this message with the following format to answer (write on one line):</p><p>1: Answer to question 1    2: Answer to question 2     ..... </p><p>If you don't know the answer to a question, simply don't include it. You can answer questions in any order.</p>"
 
         sendEmail(from_address,matching_colleges[0].name,text)
         return HttpResponse(text)
@@ -80,9 +80,9 @@ def inbound(request):
         all_challenges = Challenge.objects.filter(college=college)
         # debug_response += 'incompleted_challenges: \n' + str(all_challenges)
         answers = parseAnswerStringForAnswers(first_line)
-        debug_response += '\n correct answers:\n'
+        debug_response += '<br> correct answers:<br>'
 
-        reply_email = 'Your answers:\n\n'
+        reply_email = 'Your answers:<br><br>'
 
         for ans_key, ans_value in answers.iteritems():
             # they might have since completed the challenge they are emailing about
@@ -90,8 +90,8 @@ def inbound(request):
                 chall = all_challenges[ans_key - 1]
                 print(chall)
                 reply_email += str(ans_key) + ': '
-                reply_email += chall.text + '\n'
-                reply_email += 'You answered: ' + ans_value + '\n'
+                reply_email += chall.text + '<br>'
+                reply_email += 'You answered: ' + ans_value + '<br>'
 
                 if chall != None and chall.answer == ans_value:
                     # make them complete the challenge
@@ -104,10 +104,10 @@ def inbound(request):
 
             except IndexError:
                 reply_email += str(ans_key) + ': '
-                reply_email += 'Invalid question number.\n'
+                reply_email += 'Invalid question number.<br>'
 
-            reply_email += '\n\n'
-            reply_email += 'Your summary for ' + college_name + ' college:\n\n'
+            reply_email += '<br><br>'
+            reply_email += 'Your summary for ' + college_name + ' college:<br><br>'
             reply_email += getClueList(college, userProfile)
 
         sendEmail(to_address=from_address,subject=subject,text=reply_email)
@@ -142,7 +142,7 @@ def getClueList(college, userProfile):
 
         clues_list.append( status + '['+dict(DIFFICULTIES)[chall.difficulty]+'] ' + str(i+1) + ': ' + chall.text)
 
-    body = '\n'.join(clues_list)
+    body = '<br>'.join(clues_list)
     return body
 
 def sendBlankSubjectEmail(to_address):
