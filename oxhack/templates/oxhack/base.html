@@ -15,7 +15,7 @@
     <title>OxHUNT</title>
 
     <!-- Bootstrap Core CSS -->
-    <link href="{% static 'oxhack/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'oxhack/css/bootstrap.css' %}" rel="stylesheet">
 
     <!-- Custom CSS -->
     <link href="{% static 'oxhack/css/clean-blog.css' %}" rel="stylesheet">
@@ -64,19 +64,28 @@
                     <li {% if leaderboard %}style="background-color: #E23C3C"{% endif %}>
                         <a href="{% url 'leaderboard' %}">Leaderboard</a>
                     </li>
-                    <li {% if chord_graph %}style="background-color: #E23C3C"{% endif %}>
-                        <a href="{% url 'chord_graph' %}">See chord graph</a>
+
+
+                    <li {% if chord_graph or heat_map or network_graph %}style="background-color: #E23C3C"{% endif %} class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">Visualisations <span class="caret"></span></a>
+
+                        <ul class="dropdown-menu" role="menu">
+                            <li {% if chord_graph %}style="background-color: #E23C3C"{% endif %}>
+                                <a href="{% url 'chord_graph' %}">See chord graph</a>
+                            </li>
+                            <li {% if heat_map %}style="background-color: #E23C3C"{% endif %}>
+                                <a href="{% url 'heat_map' %}">See heat map</a>
+                            </li>
+                            <li {% if network_graph %}style="background-color: #E23C3C"{% endif %}>
+                                <a href="{% url 'network_graph' %}">View network graph</a>
+                            </li>
+                        </ul>
                     </li>
-                    <li {% if heat_map %}style="background-color: #E23C3C"{% endif %}>
-                        <a href="{% url 'heat_map' %}">See heat map</a>
-                    </li>
-                    <li {% if network_graph %}style="background-color: #E23C3C"{% endif %}>
-                        <a href="{% url 'network_graph' %}">View network graph</a>
-                    </li>
+
                     <li {% if about %}style="background-color: #E23C3C"{% endif %}>
                         <a href="{% url 'about' %}">About us</a>
                     </li>
-                    <li {% if request.get_full_path == "/accounts/register/" or request.get_full_path == "/accounts/register/complete/"  %}style="background-color: #E23C3C"{% endif %}>
+                    <li {% if request.get_full_path == "/accounts/register/" or request.get_full_path == "/accounts/registration_complete/"  %}style="background-color: #E23C3C"{% endif %}>
                         <a href="{% url 'register' %}">Register</a>
                     </li>
                 </ul>
@@ -130,10 +139,10 @@
     <script src="{% static 'oxhack/js/jquery.js' %}"></script>
 
     <!-- Bootstrap Core JavaScript -->
-    <script src="{% static 'oxhack/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'oxhack/js/bootstrap.js' %}"></script>
 
     <!-- Custom Theme JavaScript -->
-    <script src="{% static 'oxhack/js/clean-blog.min.js' %}"></script>
+    <script src="{% static 'oxhack/js/clean-blog.js' %}"></script>
 
 </body>
 
