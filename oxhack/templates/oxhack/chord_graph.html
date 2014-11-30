@@ -1,31 +1,26 @@
 {% extends "oxhack/base.html" %}
 {% block pagecontent %}
-
-
 <!-- For some reason this has to be included twice (once in base.html, once here) -->
 {% load staticfiles %}
-      <link rel="stylesheet" type="text/css" href="/static/oxhack/css/chord.css">
-      <script src="http://d3js.org/d3.v3.min.js"></script>
-      <script src="http://code.jquery.com/jquery.js"></script>
-    <!-- Page Header -->
-    <header class="intro-header-not-landing">
-    </header>
-
-    <!-- Main Content -->
-        <div class="container">
-        <div class="row">
-            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-                <h2 class="post-title">
-                    Visualisations
-                </h2>
-                <div id="chord" style="margin-left:auto; margin-right:auto">
-                </div>
-                <script src="/static/oxhack/js/chord.js"></script>
-                </br>
+<link rel="stylesheet" type="text/css" href="/static/oxhack/css/chord.css">
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://code.jquery.com/jquery.js"></script>
+<!-- Page Header -->
+<header class="intro-header-not-landing">
+</header>
+<!-- Main Content -->
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+            <h2 class="post-title">
+            Visualisations
+            </h2>
+            <div id="chord" style="margin-left:auto; margin-right:auto">
             </div>
+            <script src="/static/oxhack/js/chord.js"></script>
+            </br>
         </div>
     </div>
-
-    <hr>
-
-    {% endblock %}
+</div>
+<hr>
+{% endblock %}

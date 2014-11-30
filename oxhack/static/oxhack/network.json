@@ -1,17 +1,20 @@
 {"nodes": [
-{"college": "Magdalen"},
-{"college": "Mansfield"},
-{"college": "Pembroke"},
-{"college": "Queens"},
-{"college": "Trinity"},
-], "links": [
-{"source": 0, "target": 1, "freq": 16},
-{"source": 0, "target": 2, "freq": 9},
-{"source": 0, "target": 3, "freq": 15},
-{"source": 0, "target": 4, "freq": 15},
-{"source": 1, "target": 2, "freq": 15},
-{"source": 1, "target": 3, "freq": 5},
-{"source": 1, "target": 4, "freq": 18},
-{"source": 2, "target": 3, "freq": 14},
-{"source": 2, "target": 4, "freq": 7},
-{"source": 3, "target": 4, "freq": 17}]}
+    {"college": "Magdalen"},
+    {"college": "Mansfield"},
+    {"college": "Pembroke"},
+    {"college": "Queens"},
+    {"college": "Trinity"},
+    ], 
+ "links": [
+    {"source": 0, "target": 1, "freq": 16},
+    {"source": 0, "target": 2, "freq": 9},
+    {"source": 0, "target": 3, "freq": 15},
+    {"source": 0, "target": 4, "freq": 15},
+    {"source": 1, "target": 2, "freq": 15},
+    {"source": 1, "target": 3, "freq": 5},
+    {"source": 1, "target": 4, "freq": 18},
+    {"source": 2, "target": 3, "freq": 14},
+    {"source": 2, "target": 4, "freq": 7},
+    {"source": 3, "target": 4, "freq": 17},
+]
+}

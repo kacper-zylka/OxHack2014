@@ -45,8 +45,6 @@ var college_list = {"All Souls": "all-souls.png",
 var width = 960,
     height = 600;
 
-var color = d3.scale.category20();
-
 var force = d3.layout.force()
     .charge(-250)
     .linkDistance(70)
@@ -60,7 +58,7 @@ d3.json("/static/oxhack/network.json", function(error, graph) {
   force
       .nodes(graph.nodes)
       .links(graph.links)
-      .start();
+      .start();     
 
   var link = svg.selectAll(".link")
       .data(graph.links)
