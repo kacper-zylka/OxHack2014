@@ -1,13 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 
-# List of college names and codes
-COLLEGES = (
-    ('MAN', 'Mansfield'),
-    ('IMP', 'Imperial'),
-)
-
-
 # Difficulty enums and dictionary
 EASY = 1
 MODERATE = 2
@@ -26,7 +19,6 @@ class College(models.Model):
 
     def __str__(self):
         return self.name
-
 
 class Challenge(models.Model):
     text = models.CharField(max_length=1000)
@@ -47,11 +39,11 @@ class UserProfile(models.Model):
 
 
 class ChallengeCompletion(models.Model):
-    user = models.ForeignKey(UserProfile)
+    user = models.ForeignKey(User)
     challenge = models.ForeignKey(Challenge)
-    time = models.DateField()  # TODO add auto_now?
+    time = models.DateTimeField()  # TODO add auto_now?
 
     def __str__(self):
-        return self.user.__str__() + " " + self.challenge.__str__() + " " + self.time
+        return self.user.__str__() + " " + self.challenge.__str__() + " " + str(self.time)
 
 
