@@ -39,7 +39,7 @@ class UserProfile(models.Model):
 
 
 class ChallengeCompletion(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(UserProfile)
     challenge = models.ForeignKey(Challenge)
     time = models.DateTimeField()  # TODO add auto_now?
 

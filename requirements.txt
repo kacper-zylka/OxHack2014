@@ -2,6 +2,7 @@ Django==1.7.1
 argparse==1.2.2
 dj-database-url==0.3.0
 dj-static==0.0.6
+django-bootstrap-form==3.1
 django-registration-redux==1.1
 django-toolbelt==0.0.1
 gunicorn==19.1.1
@@ -13,6 +14,6 @@ smtpapi==0.1.2
 static==1.0.2
 static3==0.5.1
 unittest2==0.8.0
-#vboxapi==1.0
+vboxapi==1.0
 virtualenv==1.11.6
 wsgiref==0.1.2
